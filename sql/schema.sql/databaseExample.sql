@@ -25,9 +25,10 @@ create TABLE products (
     description TEXT,
     price DECIMAL(10, 2) NOT NULL,
     stock_quantity INT DEFAULT 0,
-    caron_factor DECIMAL(5,2),
+    carbon_factor DECIMAL(5,2),
     category_id INT,
-    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+    image_url VARCHAR(255),
+    FOREIGN KEY (category_id) REFERENCES categories(category_id)
 );
 
 create TABLE orders (
@@ -54,7 +55,7 @@ create TABLE subscriptions (
     subscription_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     product_id INT,
-    frequecy ENUM('Weekly', 'Monthly') DEFAULT 'Monthly',
+    frequency ENUM('Weekly', 'Monthly') DEFAULT 'Monthly',
     next_billing_date DATE,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
     FOREIGN KEY (product_id) REFERENCES products(product_id)
@@ -90,65 +91,11 @@ create TABLE reviews (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-create TABLE product_categories (
-    product_id INT,
-    category_id INT,
-    PRIMARY KEY (product_id, category_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id),
-    FOREIGN KEY (category_id) REFERENCES categories(category_id)
-);
-
-create TABLE addresses (
-    address_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    street VARCHAR(255) NOT NULL,
-    city VARCHAR(100) NOT NULL,
-    state VARCHAR(100) NOT NULL,
-    zip_code VARCHAR(20) NOT NULL,
-    country VARCHAR(100) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-create TABLE payments (
-    payment_id INT AUTO_INCREMENT PRIMARY KEY,
-    order_id INT,
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    amount DECIMAL(10, 2) NOT NULL,
-    payment_method VARCHAR(50),
-    status VARCHAR(50) DEFAULT 'Completed',
-    FOREIGN KEY (order_id) REFERENCES orders(order_id)
-);
-
-create TABLE inventory_logs (
-    log_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_id INT,
-    change_quantity INT NOT NULL,
-    change_type VARCHAR(50) NOT NULL,
-    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
-);
-
-create TABLE wishlists (
-    wishlist_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id)
-);
-
-create TABLE wishlist_items (
-    wishlist_item_id INT AUTO_INCREMENT PRIMARY KEY,
-    wishlist_id INT,
-    product_id INT,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (wishlist_id) REFERENCES wishlists(wishlist_id),
-    FOREIGN KEY (product_id) REFERENCES products(product_id)
-);
-
 create TABLE eco_point_transactions (
     transaction_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     points INT DEFAULT 0,
     source ENUM('Purchase', 'Review', 'Referral', 'Community Post') DEFAULT 'Purchase',
-    created_at TIMESTAMP DEFAULT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 )
